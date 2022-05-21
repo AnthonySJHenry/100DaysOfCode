@@ -1,2 +1,3 @@
 .vscode
 move.py
+__pycache__/
