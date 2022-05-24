@@ -1,8 +1,7 @@
-from curses.textpad import Textbox
 from tkinter import *
 import os
 
-
+#The plan was to make a GUI that could do crud work to files. This may take some time.
 
 
 path = os.path.expanduser('~/Desktop')
