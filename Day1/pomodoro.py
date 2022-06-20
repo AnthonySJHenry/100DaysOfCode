@@ -15,8 +15,13 @@ timer_entry_secs = Entry(fg="black", bg="green")
 timer_entry_secs.grid(row=1, column=1)
 set_button = Button(text='Set', highlightthickness=0)
 
+<<<<<<< HEAD
+canvas = Canvas(width=400, height=400, bg=BG_COLOR, highlightbackground=BG_COLOR)
+clock_image = PhotoImage(file="clock256px.png")
+=======
 canvas = Canvas(width=400, height=400, bg=BG_COLOR, highlightthickness=0)
 clock_image = PhotoImage(file="Day1/clock256px.png")
+>>>>>>> 27deb342b52d7fe0a491ddb31e48c6f8864ab275
 canvas.create_image(200,200, image=clock_image)
 canvas.create_text(200,250,text="00:00", fill="#006E7F", font=("Arial", 24, "bold"))
 canvas.grid(row=2, column=1)
