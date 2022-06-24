@@ -1,5 +1,5 @@
 //first Go program
-package main
+// package main
 
 import "fmt"
 
