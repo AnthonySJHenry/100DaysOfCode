@@ -1,3 +1,4 @@
 .vscode
+.cspell
 move.py
 __pycache__/
