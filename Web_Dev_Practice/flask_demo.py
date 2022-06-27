@@ -18,6 +18,9 @@ db.create_all()
 
 @app.route('/')
 def index():
+    # person = Person(name='Anthony')
+    # db.session.add(person)
+    # db.session.commit()
     person = Person.query.filter(Person.name == 'Anthony').first()
     return 'Hello ' + person.name + "!"
 
