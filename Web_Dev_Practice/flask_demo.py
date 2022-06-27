@@ -7,15 +7,19 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Person(db.Model):
-    # __tablename__ = 'people' <-- if you want to change tablename
+    __tablename__ = 'people' #<-- if you want to change tablename
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
+    
+    def __repr__(self):
+        return self.name
 
 db.create_all()
 
 @app.route('/')
 def index():
-    return '<h1>Hello</h1>'
+    person = Person.query.filter(Person.name == 'Anthony').first()
+    return 'Hello ' + person.name + "!"
 
 if __name__ == '__main__':
     app.debug=True
