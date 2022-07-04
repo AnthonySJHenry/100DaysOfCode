@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>To Do App</title>
+        <style>
+            .hidden {
+                display:none;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <form id="form">
+            <Label>Name: </Label>
+            <input type="text" id="name" />
+
+            <Label>Description: </Label>
+            <input type="text" id="desc" />
+            <input type="submit" value="Create" />
+        </form>
+
+        <ul id="todos">
+            {% for task in tasks %}
+            <li>{{task.name}} => {{task.desc}}</li>
+            {% endfor %}
+        </ul>
+
+        <div class="hidden" id="error">Something went wrong dude!.. I don't know</div>
+        
+        
+        <script>
+            $(document).ready(function(){
+                const form = $("#form")
+                form.on("submit", function(e){
+                    e.preventDefault();
+                    name = $("#name").val();
+                    desc = $("#desc").val();
+                    jsonData = JSON.stringify({
+                        'name': name, 
+                        'desc': desc
+                    })
+
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: "/create",
+                        dataType: "json",
+                        data: jsonData,
+                        success : (response) => {
+                            console.log('Successful response!')
+                            console.log(response);
+                            add_name = response['name'];
+                            add_desc = response['desc'];
+                            newItem = document.createElement('LI');
+                            newItem.innerHTML = add_name +" => "+ add_desc
+                            $("#todos").append(newItem)
+                        },
+                        error : (response) => {
+                            $("#error").removeClass("hidden")
+                        }
+                    })
+                    
+
+                    /*fetch('/create', {
+                        method: 'POST',
+                        body: jsonData,
+                        headers: {
+                          'Content-Type': 'application/json',
+                        }
+                      })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(jsonResponse) {
+                    console.log("SECOND:", jsonResponse);
+                       /*const liItem= document.createElement('LI');
+                       liItem.innerHTML = jsonResponse['description'];
+                       document.getElementById('todos').appendChild(liItem);
+                       document.getElementById('error').classname='hidden';
+                  })
+                  .catch(function() {
+              
+                       document.getElementById('error').className='';
+                        })
+                });*/
+                });
+
+                
+            });
+              
+        </script>
+    </body>
+</html>
