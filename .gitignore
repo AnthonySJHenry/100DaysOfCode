@@ -2,3 +2,4 @@
 .cspell
 move.py
 __pycache__/
+.env

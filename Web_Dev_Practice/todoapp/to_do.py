@@ -19,18 +19,48 @@ class Todo(db.Model):
         return f"{self.name}: {self.desc}"
 
 #db.create_all() #<-- if not using migrations
+#HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']
+@app.route('/delete/<todo_id>', methods=['DELETE'])
+def delete_todo(todo_id):
+    try:     
+        db.session.delete(Todo.query.get(todo_id))
+        db.session.commit()
+    except:
+        db.session.rollback()
+        print("error:",sys.exc_info())
+    finally:
+        db.session.close()
+        
+    return render_template('index.html', tasks=Todo.query.all())
+
+@app.route('/completed/<todo_id>', methods=['POST'])
+def completed_todo(todo_id):
+    try:
+        data = request.get_json()
+        isComplete = data['isComplete']
+        Todo.query.get(todo_id).complete = isComplete
+        Todo.query.order_by(Todo.id).all()
+        db.session.commit()
+    except:
+        db.session.rollback()
+        print("error:",sys.exc_info())
+    finally:
+        db.session.close()
+        
+    
+    return redirect("/")
 
 @app.route('/create', methods=['POST'])
 def create_todo():
-    body={}
+    #body={}
     error = False
     try: 
         data = request.get_json()
         name = data['name']
         desc = data['desc']
         todo = Todo(name=name, desc=desc)
-        body['name'] = todo.name
-        body['desc'] = todo.desc
+        # body['name'] = todo.name
+        # body['desc'] = todo.desc
         db.session.add(todo)
         db.session.commit()
     except:
@@ -42,9 +72,11 @@ def create_todo():
         if  error == True:
             abort(400)
         else:            
-            return body
+            return redirect("/")
 
 @app.route('/')
+@app.route('/home')
+@app.route('/index')
 def index():
     return render_template('index.html', tasks=Todo.query.all())
  
