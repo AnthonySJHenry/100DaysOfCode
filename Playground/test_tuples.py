@@ -1,0 +1,6 @@
+test_tup = set()
+test_tup.add(3)
+test_tup.add(3)
+test_tup.add(4)
+test_tup.add(3)
+print(test_tup)

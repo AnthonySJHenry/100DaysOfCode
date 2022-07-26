@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>To Do App</title>
+        <style>
+            .hidden {
+                display:none;
+            }
+
+            ul {
+                list-style:none;
+                padding:0;
+            }
+
+            i {
+                cursor:pointer;
+            }
+            
+            
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://kit.fontawesome.com/c238211312.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <form id="form">
+            <Label>Task: </Label>
+            <input type="text" id="name" />
+
+            <Label>Description: </Label>
+            <input type="text" id="desc" />
+            <input type="submit" value="Create" />
+        </form>
+
+        <ul id="todos">
+            {% for task in tasks %}
+            <li>
+                <input type="checkbox" class="checkboxes" id="completed{{task.id}}" name="completed" value="{{task.id}}" {% if task.complete %} checked {% endif %}>
+                {{task.name}} => {{task.desc}} 
+                <i class="fa-solid fa-trash-can deleteTask" data-id="{{task.id}}"></i>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="hidden" id="error">Something went wrong dude!.. I don't know</div>
+        
+        
+        <script>
+            //find checkmark boxes and link them to api call.. checked boxes should mark task as complete, and redirect
+            $(document).ready(function(){
+                count = 0
+                $('.deleteTask').each(function(){
+                    $(this).click(function(e){
+                        $.ajax({
+                            url: "/delete/"+ e.target.dataset['id'],
+                            type: "DELETE",
+                            //contentType: "application/json",
+                            //dataType: "json",
+                            //data: jsonData,
+                            success : (response) => {
+                                console.log('Successful response!')
+                                $('body').html(response)
+                            },
+                            error: (response) => {
+                                console.log('Incorrect response!')
+                                $('body').html(response)
+                            }
+                        })
+                    })
+                })
+                $('.checkboxes').each(function(){
+                    $(this).change((e)=>{
+                        isComplete = e.target.checked;
+                        jsonData = JSON.stringify({
+                            'isComplete': isComplete
+                        })
+                        $.ajax({
+                            type: "POST",
+                            contentType: "application/json",
+                            url: "/completed/"+ e.target.value,
+                            //dataType: "json",
+                            data: jsonData,
+                            success : (response) => {
+                                console.log('Successful response!')
+                                $('body').html(response)
+                            },
+                            error : (jqXHR) => {
+                                //$("#error").removeClass("hidden")
+                                console.log("ERROR", jqXHR)
+                            }
+                        })
+
+                        console.log(e.target.checked);
+                        console.log(e.target.value);
+                    })
+                })
+                
+                $("#form").on("submit", function(e){
+                    e.preventDefault();
+                    name = $("#name").val();
+                    desc = $("#desc").val();
+                    jsonData = JSON.stringify({
+                        'name': name, 
+                        'desc': desc
+                    })
+
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json",
+                        url: "/create",
+                        //dataType: "json",
+                        data: jsonData,
+                        success : (response) => {
+                            console.log('Successful response!')
+                            $('body').html(response)
+                            /*console.log(response);
+                            count += 1;
+                            add_name = response['name'];
+                            add_desc = response['desc'];
+                            newItem = document.createElement('LI');
+                            var x = document.createElement("INPUT");
+                            x.setAttribute("type", "checkbox");   
+                            x.setAttribute("id", "new_completed_"+count);
+                            newItem.innerHTML = x.outerHTML + add_name +" => "+ add_desc
+                            $("#todos").append(newItem)*/
+                        },
+                        error : (response) => {
+                            $("#error").removeClass("hidden")
+                        }
+                    })
+                    
+
+                    /*fetch('/create', {
+                        method: 'POST',
+                        body: jsonData,
+                        headers: {
+                          'Content-Type': 'application/json',
+                        }
+                      })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(jsonResponse) {
+                    console.log("SECOND:", jsonResponse);
+                       /*const liItem= document.createElement('LI');
+                       liItem.innerHTML = jsonResponse['description'];
+                       document.getElementById('todos').appendChild(liItem);
+                       document.getElementById('error').classname='hidden';
+                  })
+                  .catch(function() {
+              
+                       document.getElementById('error').className='';
+                        })
+                });*/
+                });
+
+                
+            });
+              
+        </script>
+    </body>
+</html>
