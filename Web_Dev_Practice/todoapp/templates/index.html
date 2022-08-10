@@ -7,10 +7,23 @@
                 display:none;
             }
 
-            ul {
+            table, td, th {
+                border: 1px solid;
+              }
+            
+            td{
+                text-align: center;
+            }
+
+            table {
+                width:100%;
+                border-collapse: collapse;
+              }
+
+            /*ul {
                 list-style:none;
                 padding:0;
-            }
+            } */
 
             i {
                 cursor:pointer;
@@ -29,9 +42,26 @@
             <Label>Description: </Label>
             <input type="text" id="desc" />
             <input type="submit" value="Create" />
-        </form>
+        </form> <br><br><br>
 
-        <ul id="todos">
+        <table>
+            <tr>
+              <th><i class="fa-solid fa-check"></i></th>
+              <th>Task</th>
+              <th>Description</th>
+              <th><i class="fa-solid fa-x"></i></th>
+            </tr>
+            {% for task in tasks %}
+            <tr>
+                <td><input type="checkbox" class="checkboxes" id="completed{{task.id}}" name="completed" value="{{task.id}}" {% if task.complete %} checked {% endif %}></td>
+                <td>{{task.name}}</td>
+                <td>{{task.desc}}</td>
+                <td><i class="fa-solid fa-trash-can deleteTask" data-id="{{task.id}}"></i></td>
+            </tr>
+            {% endfor %}
+          </table>
+
+        <!-- <ul id="todos">
             {% for task in tasks %}
             <li>
                 <input type="checkbox" class="checkboxes" id="completed{{task.id}}" name="completed" value="{{task.id}}" {% if task.complete %} checked {% endif %}>
@@ -39,7 +69,7 @@
                 <i class="fa-solid fa-trash-can deleteTask" data-id="{{task.id}}"></i>
             </li>
             {% endfor %}
-        </ul>
+        </ul> -->
 
         <div class="hidden" id="error">Something went wrong dude!.. I don't know</div>
         

@@ -1,14 +1,8 @@
 .vscode
 .cspell
 move.py
-<<<<<<< HEAD
 __pycache__/
-<<<<<<< HEAD
 *Cox.txt
 Cox/
-=======
 .env
->>>>>>> bb8c9c59a9a297c2ffd2536e2d6a1ed28617df55
-=======
 __pycache__/
->>>>>>> parent of f80c729 (Python DS)
