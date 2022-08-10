@@ -48,7 +48,7 @@ def completed_todo(todo_id):
         db.session.close()
         
     
-    return redirect("/")
+    return render_template('index.html', tasks=Todo.query.all())
 
 @app.route('/create', methods=['POST'])
 def create_todo():
@@ -72,7 +72,7 @@ def create_todo():
         if  error == True:
             abort(400)
         else:            
-            return redirect("/")
+            return render_template('index.html', tasks=Todo.query.all())
 
 @app.route('/')
 @app.route('/home')
