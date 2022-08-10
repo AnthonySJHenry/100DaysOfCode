@@ -5,3 +5,4 @@ __pycache__/
 *Cox.txt
 Cox/
 .env
+__pycache__/
