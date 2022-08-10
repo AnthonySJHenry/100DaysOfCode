@@ -1,3 +1,4 @@
+from importlib.util import LazyLoader
 from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -9,16 +10,26 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+class List(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    list = db.relationship('Todo', backref="list")
+    def __repr__(self):
+        return f"{self.id}: {self.name}"
+
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
     desc = db.Column(db.String(), nullable=True)
     complete = db.Column(db.Boolean, nullable=True)
+    list_id = db.Column(db.Integer, db.ForeignKey("list.id")) 
     
     def __repr__(self):
         return f"{self.name}: {self.desc}"
 
-#db.create_all() #<-- if not using migrations
+
+
+#db.create_all()
 #HTTP_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH']
 @app.route('/delete/<todo_id>', methods=['DELETE'])
 def delete_todo(todo_id):
@@ -31,7 +42,7 @@ def delete_todo(todo_id):
     finally:
         db.session.close()
         
-    return render_template('index.html', tasks=Todo.query.all())
+    return render_template('index.html', tasks=Todo.query.order_by('id').all())
 
 @app.route('/completed/<todo_id>', methods=['POST'])
 def completed_todo(todo_id):
@@ -78,7 +89,7 @@ def create_todo():
 @app.route('/home')
 @app.route('/index')
 def index():
-    return render_template('index.html', tasks=Todo.query.all())
+    return render_template('index.html', tasks=Todo.query.order_by('id').all())
  
 #USING .env this time    
 # if __name__ == '__main__':
