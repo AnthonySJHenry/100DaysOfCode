@@ -15,7 +15,7 @@ class List(db.Model):
     name = db.Column(db.String(), nullable=False)
     list = db.relationship('Todo', backref="list")
     def __repr__(self):
-        return f"{self.id}: {self.name}"
+        return f"{self.id}: {self.name}" 
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
